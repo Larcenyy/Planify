@@ -50,6 +50,9 @@ class Events
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $userId = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $location = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -141,6 +144,18 @@ class Events
     public function setUserId(?User $userId): static
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(string $location): static
+    {
+        $this->location = $location;
 
         return $this;
     }
