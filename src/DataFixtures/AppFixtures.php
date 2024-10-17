@@ -54,7 +54,7 @@ class AppFixtures extends Fixture
             $randomUser = $this->faker->randomElement($users);
 
             if ($randomUser) { // check if user exists
-                $event->setUserId($randomUser);
+                $event->setUser($randomUser);
             }
 
             $manager->persist($event);
