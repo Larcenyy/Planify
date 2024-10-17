@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -59,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Events>
      */
-    #[ORM\OneToMany(targetEntity: Events::class, mappedBy: 'userId')]
+    #[ORM\OneToMany(targetEntity: Events::class, mappedBy: 'user')]
     private Collection $events;
 
     public function __construct()
@@ -146,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->setUserId($this);
+            $event->setUser($this);
         }
 
         return $this;
@@ -156,8 +158,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
-            if ($event->getUserId() === $this) {
-                $event->setUserId(null);
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
             }
         }
 
