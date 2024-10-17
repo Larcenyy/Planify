@@ -64,17 +64,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Events::class, mappedBy: 'user')]
     private Collection $events;
 
-    /**
-     * @var Collection<int, Events>
-     */
-    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'suscribers')]
-    private Collection $events_suscribers;
-
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        $this->events_suscribers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,32 +222,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection<int, Events>
-     */
-    public function getEventsSuscribers(): Collection
-    {
-        return $this->events_suscribers;
-    }
-
-    public function addEventsSuscriber(Events $eventsSuscriber): static
-    {
-        if (!$this->events_suscribers->contains($eventsSuscriber)) {
-            $this->events_suscribers->add($eventsSuscriber);
-            $eventsSuscriber->addSuscriber($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEventsSuscriber(Events $eventsSuscriber): static
-    {
-        if ($this->events_suscribers->removeElement($eventsSuscriber)) {
-            $eventsSuscriber->removeSuscriber($this);
-        }
-
-        return $this;
     }
 }

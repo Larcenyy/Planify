@@ -2,10 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Events;
 use App\Entity\User;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
@@ -38,27 +35,6 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
-        // Generation of event fixtures
-        for ($i = 0; $i < 3; $i++) {
-            $event = new Events();
-            $event->setTitle($this->faker->sentence());
-            $event->setContent($this->faker->paragraph());
-            $event->setLocation($this->faker->city());
-
-            $start_date = new DateTime();
-            $startAt = $this->faker->dateTimeBetween($start_date, $start_date->modify('+5 hours'));
-            $event->setStartAt(DateTimeImmutable::createFromMutable($startAt));
-            $event->setEndAt(DateTimeImmutable::createFromMutable($startAt));
-
-            $users = $manager->getRepository(User::class)->findAll();
-            $randomUser = $this->faker->randomElement($users);
-
-            if ($randomUser) { // check if user exists
-                $event->setUser($randomUser);
-            }
-
-            $manager->persist($event);
-        }
 
         $manager->flush();
     }

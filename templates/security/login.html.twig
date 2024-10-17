@@ -7,7 +7,6 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4">
                 <h1 class="text-center my-4">Planify | Connexion</h1>
-                {% if not app.user %}
                 <p class="text-center">Connectez-vous afin de gérer vos événements.</p>
                 <form action="{{ path('app_login') }}" method="post">
                     {% if error %}
@@ -26,13 +25,6 @@
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                     <button type="submit" class="btn btn-primary w-100">Se connecter</button>
                 </form>
-                {% else %}
-                    <p class="text-center"><span class="fw-bold">Attention !</span>, vous êtes déjà connectez et vous invitons à vous redirigez depuis ces boutons</p>
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-secondary" href="{{ path('app_home') }}">Retournez à l'accueil</a>
-                        <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Se déconnecter</a>
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>

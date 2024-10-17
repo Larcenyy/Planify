@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\EventsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -50,22 +48,12 @@ class Events
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?User $user = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $location = null;
-
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events_suscribers')]
-    private Collection $suscribers;
+    private ?User $userId = null;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        $this->suscribers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,50 +133,14 @@ class Events
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserId(): ?User
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(?User $user): static
+    public function setUserId(?User $userId): static
     {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getLocation(): ?string
-    {
-        return $this->location;
-    }
-
-    public function setLocation(string $location): static
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getSuscribers(): Collection
-    {
-        return $this->suscribers;
-    }
-
-    public function addSuscriber(User $suscriber): static
-    {
-        if (!$this->suscribers->contains($suscriber)) {
-            $this->suscribers->add($suscriber);
-        }
-
-        return $this;
-    }
-
-    public function removeSuscriber(User $suscriber): static
-    {
-        $this->suscribers->removeElement($suscriber);
+        $this->userId = $userId;
 
         return $this;
     }
