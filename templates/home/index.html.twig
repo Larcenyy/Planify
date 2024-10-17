@@ -4,12 +4,63 @@
 
 {% block body %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4">
+        <div class="row justify-content-center mb-4">
+            <div class="col-xl-4">
                 <h1 class="text-center my-4">Planify | Nos événements à venir</h1>
                 <p class="text-center">Inscrivez-vous à l'un des événements vous correspondant.</p>
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Félicitation!</h4>
+                        <p>{{ message }}</p>
+                        <hr>
+                        <p class="mb-0">Vous pouvez consultez votre rubrique 'Mes événements'.</p>
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('danger') %}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Une erreur est survenu!</h4>
+                        <p class="mb-0">{{ message }}</p>
+                    </div>
+                {% endfor %}
             </div>
+        </div>
+
+
+        <div class="row gap-5 mx-auto justify-content-center">
+            {% if events|length > 0 %}
+                {% for event in events %}
+                    <div class="col col-xl-3">
+                        <div class="card h-100">
+                            <div class="d-flex card-body">
+                                <div class="d-flex flex-column justify-content-center align-items-start">
+                                    <div class="d-flex justify-content-between gap-3 mb-2 flex-wrap">
+                                        <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
+                                        <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
+                                    </div>
+                                    <h5 class="mb-0 card-title text-uppercase">{{ event.title }}</h5>
+                                    <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ event.location }}</p>
+                                    <hr>
+                                    <p class="card-text mt-2 fw-medium flex-grow-1">{{ event.content }}</p>
+                                    <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
+                                        <small class="d-block">Créer le : <span class="fw-bold">{{ event.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ event.user.firstname }} {{ event.user.lastname }}</span></small>
+                                        {% if event.getUser() == app.user %}
+                                            <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier l'événement</a>
+                                        {% else %}
+                                            {% if not event.getSuscribers().contains(app.user) %}
+                                                <a href="{{ path('app_event_suscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>
+                                            {% else %}
+                                                <a href="#" class="text-nowrap btn btn-outline-danger px-3 py-2 mb-2 fw-semibold rounded-pill">Quitter l'événement</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center fw-bolder fs-4">Aucun événement pour le moment.</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
