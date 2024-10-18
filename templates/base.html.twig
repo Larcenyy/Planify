@@ -38,9 +38,7 @@
     {% for message in app.flashes('success') %}
         <div class="alert alert-success" role="alert">
             <h4 class="alert-heading">Félicitation!</h4>
-            <p>{{ message }}</p>
-            <hr>
-            <p class="mb-0">Vous pouvez consultez votre rubrique 'Mes événements'.</p>
+            <p class="mb-0">{{ message }}</p>
         </div>
     {% endfor %}
     {% for message in app.flashes('danger') %}
