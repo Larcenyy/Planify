@@ -22,6 +22,37 @@ class EventsController extends AbstractController
         ]);
     }
 
+    #[Route('/events-unsuscribe/{id}', name: 'app_event_unsuscribe')]
+    public function userUnsuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
+    {
+        $event = $eventsRepository->find($id);
+        $user = $this->getUser();
+
+        if (!$event) {
+            $this->addFlash('danger', "L'événement choisi n'existe pas");
+            return $this->redirectToRoute('app_home');
+        }
+
+        if(!$user) {
+            $this->addFlash('danger', "Vous devez être connecté pour pouvoir vous retirer d'un événement !");
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($event->getUser() === $user) {
+            $this->addFlash('danger', "Vous ne pouvez pas vous désinscrire de vos propres événements !");
+        } else {
+            if ($event->getSuscribers()->contains($user)) {
+                $event->removeSuscriber($user);
+                $entityManager->persist($event);
+                $entityManager->flush();
+                $this->addFlash('success', "Vous vous êtes désinscrit à l'événement !");
+            } else{
+                $this->addFlash('danger', "Vous n'êtes pas inscrit à cet événement !");
+            }
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
 
     #[Route('/events-suscribe/{id}', name: 'app_event_suscribe')]
     public function userSuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
@@ -35,6 +66,7 @@ class EventsController extends AbstractController
         }
 
         if(!$user) {
+            $this->addFlash('danger', "Vous devez être connecté pour pouvoir vous retirer d'un événement !");
             return $this->redirectToRoute('app_login');
         }
 

@@ -8,20 +8,6 @@
             <div class="col-xl-4">
                 <h1 class="text-center my-4">Planify | Nos événements à venir</h1>
                 <p class="text-center">Inscrivez-vous à l'un des événements vous correspondant.</p>
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Félicitation!</h4>
-                        <p>{{ message }}</p>
-                        <hr>
-                        <p class="mb-0">Vous pouvez consultez votre rubrique 'Mes événements'.</p>
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Une erreur est survenu!</h4>
-                        <p class="mb-0">{{ message }}</p>
-                    </div>
-                {% endfor %}
             </div>
         </div>
 
@@ -49,7 +35,7 @@
                                             {% if not event.getSuscribers().contains(app.user) %}
                                                 <a href="{{ path('app_event_suscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>
                                             {% else %}
-                                                <a href="#" class="text-nowrap btn btn-outline-danger px-3 py-2 mb-2 fw-semibold rounded-pill">Quitter l'événement</a>
+                                                <a href="{{ path('app_event_unsuscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-danger px-3 py-2 mb-2 fw-semibold rounded-pill">Quitter l'événement</a>
                                             {% endif %}
                                         {% endif %}
                                     </div>
