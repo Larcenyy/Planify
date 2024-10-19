@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes événements{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center mb-4">
+        <div class="col-xl-4">
+            <h1 class="text-center my-4 mb-2">Planify | Vos événéments</h1>
+            <p class="text-center">Retrouvez la liste des événements auquels vous vous êtes inscrit.</p>
+            <div class="d-flex justify-content-between gap-2">
+                <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary">Nombre d'événement créer : {{ myCreatedEvents|length }}</span>
+                <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Nombre d'événement inscrit : {{ subscribedEvents|length }}</span>
+                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Nombre d'événement terminé : {{ completedEvents|length }}</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="accordion mx-auto col-xl-8" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Les événements où je suis inscrit
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body row">
+                    {% if subscribedEvents|length > 0 %}
+                        {% for susbribedEvent in subscribedEvents %}
+                            <div class="col col-xl-3">
+                                <div class="card h-100">
+                                    <div class="d-flex card-body">
+                                        <div class="d-flex flex-column justify-content-center align-items-start">
+                                            <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
+                                                <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ susbribedEvent.startAt|date('d/m/Y') }} à {{ susbribedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ susbribedEvent.startAt|date('d/m/Y') }} à {{ susbribedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ susbribedEvent.getSuscribers().count() }}</span>
+                                            </div>
+                                            <h5 class="mb-0 card-title text-uppercase">{{ susbribedEvent.title }}</h5>
+                                            <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ susbribedEvent.location }}</p>
+
+                                            <hr>
+                                            <p class="card-text mt-2 fw-medium flex-grow-1">{{ susbribedEvent.content }}</p>
+                                            <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
+                                                <small class="d-block">Créer le : <span class="fw-bold">{{ susbribedEvent.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ susbribedEvent.user.firstname }} {{ susbribedEvent.user.lastname }}</span></small>
+                                                {% if susbribedEvent.getUser() == app.user %}
+                                                    <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
+                                                {% else %}
+                                                    {% if not susbribedEvent.getSuscribers().contains(app.user) %}
+                                                        <a href="{{ path('app_event_suscribe', { 'id' : susbribedEvent.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>
+                                                    {% else %}
+                                                        <a href="{{ path('app_event_unsuscribe', { 'id' : susbribedEvent.id }) }}" class="text-nowrap btn btn-outline-danger px-3 py-2 mb-2 fw-semibold rounded-pill">Quitter l'événement</a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center">
+                            <p class="fw-semibold">Vous ne participez à aucun événément, mais ne vous inquiétez pas !</p>
+                            <a href="{{ path('app_home') }}" class="text-nowrap btn btn-outline-primary px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre un événement</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                    Mes événements
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body row">
+                    {% if myCreatedEvents|length > 0 %}
+                        {% for my_events in myCreatedEvents %}
+                            <div class="col col-xl-3">
+                                <div class="card h-100">
+                                    <div class="d-flex card-body">
+                                        <div class="d-flex flex-column justify-content-center align-items-start">
+                                            <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
+                                                <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ my_events.startAt|date('d/m/Y') }} à {{ my_events.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ my_events.startAt|date('d/m/Y') }} à {{ my_events.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ my_events.getSuscribers().count() }}</span>
+                                            </div>
+                                            <h5 class="mb-0 card-title text-uppercase">{{ my_events.title }}</h5>
+                                            <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ my_events.location }}</p>
+
+                                            <hr>
+                                            <p class="card-text mt-2 fw-medium flex-grow-1">{{ my_events.content }}</p>
+                                            <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
+                                                <small class="d-block">Créer le : <span class="fw-bold">{{ my_events.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ my_events.user.firstname }} {{ my_events.user.lastname }}</span></small>
+                                                <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center">
+                            <p class="fw-semibold">Vous ne possedez aucun événement, mais ne vous inquiétez pas !</p>
+                            <a href="#" class="text-nowrap btn btn-outline-primary px-3 py-2 mb-2 fw-semibold rounded-pill">Créer un événement</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                    Les événements terminé
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-body row">
+                    {% if completedEvents|length > 0 %}
+                        {% for completedEvent in completedEvents %}
+                            <div class="col col-xl-3">
+                                <div class="card h-100">
+                                    {% if completedEvent.getUser() == app.user and completedEvent.startAt > "now"|date("Y-m-d H:i:s") %}
+                                    <a href="" class="text-center z-3 position-absolute start-0 top-50 end-0 opacity-100 text-nowrap btn btn-warning px-3 py-2 mb-2 fw-semibold">Modifier mon événement</a>
+                                    {% endif %}
+                                    <div class="d-flex card-body opacity-50">
+                                        <div class="d-flex flex-column justify-content-center align-items-start">
+                                            <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
+                                                <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarrer le : {{ completedEvent.startAt|date('d/m/Y') }} à {{ completedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Terminer le : {{ completedEvent.startAt|date('d/m/Y') }} à {{ completedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant total : {{ completedEvent.getSuscribers().count() }}</span>
+                                            </div>
+                                            <h5 class="mb-0 card-title text-uppercase">{{ completedEvent.title }}</h5>
+                                            <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ completedEvent.location }}</p>
+
+                                            <hr>
+                                            <p class="card-text mt-2 fw-medium flex-grow-1">{{ completedEvent.content }}</p>
+                                            <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
+                                                <small class="d-block">Créer le : <span class="fw-bold">{{ completedEvent.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ completedEvent.user.firstname }} {{ completedEvent.user.lastname }}</span></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center">
+                            <p class="fw-semibold">Vous n'avez pas d'événement terminé.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -14,11 +14,37 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class EventsController extends AbstractController
 {
-    #[Route('/events', name: 'app_events')]
-    public function index(): Response
+    #[Route('/my-events/', name: 'app_user_my_events')]
+    public function userEvent(EventsRepository $eventsRepository): Response
     {
+        $user = $this->getUser();
+
+        $myEvents = $eventsRepository->findBy(['user' => $user]);
+
+        $subscribedEvents = $eventsRepository->createQueryBuilder('e')
+            ->where('e.startAt > :now')
+            ->andWhere(':user MEMBER OF e.suscribers')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('user', $user)
+            ->orderBy('e.startAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $completedEvents = $eventsRepository->createQueryBuilder('e')
+            ->where('e.startAt < :now')
+            ->andWhere('e.user = :user OR :user MEMBER OF e.suscribers')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('user', $user)
+            ->orderBy('e.startAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+
         return $this->render('events/index.html.twig', [
-            'controller_name' => 'EventsController',
+            'myCreatedEvents' => $myEvents,
+            'subscribedEvents' => $subscribedEvents,
+            'completedEvents' => $completedEvents,
+
+            'currentDateTime' => new \DateTimeImmutable(),
         ]);
     }
 
