@@ -14,6 +14,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class EventsController extends AbstractController
 {
+    /**
+     * @param EventsRepository $eventsRepository
+     * @return Response
+     */
     #[Route('/my-events/', name: 'app_user_my_events')]
     public function userEvent(EventsRepository $eventsRepository): Response
     {
@@ -48,6 +52,14 @@ class EventsController extends AbstractController
         ]);
     }
 
+    /**
+     * Allow a user to unsubscribe from an event
+     *
+     * @param int $id The id of the event
+     * @param EventsRepository $eventsRepository The repository of events
+     * @param EntityManagerInterface $entityManager The entity manager
+     * @return Response A redirection to the home page
+     */
     #[Route('/events-unsuscribe/{id}', name: 'app_event_unsuscribe')]
     public function userUnsuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
@@ -80,6 +92,13 @@ class EventsController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * Allows a user to suscribe to an event.
+     *
+     * @param int $id The id of the event to suscribe to.
+     *
+     * @return Response A redirection to the homepage.
+     */
     #[Route('/events-suscribe/{id}', name: 'app_event_suscribe')]
     public function userSuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
@@ -122,8 +141,13 @@ class EventsController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+
     /**
-     * @throws \DateMalformedStringException
+     * Creates a new event and redirects to the user's event list.
+     *
+     * @param Request $request The request from the user.
+     * @param EntityManagerInterface $entityManager The entity manager.
+     * @return Response The response to the user.
      */
     #[Route('/event-create', name: 'app_event_create')]
     public function createEvent(Request $request, EntityManagerInterface $entityManager): Response
@@ -153,4 +177,33 @@ class EventsController extends AbstractController
             "form" => $form->createView()
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param EventsRepository $eventsRepository
+     * @param $id
+     * @return Response
+     */
+    #[Route('/event-delete/{id}', name: 'app_event_delete')]
+    public function deleteEvent(Request $request, EntityManagerInterface $entityManager, EventsRepository $eventsRepository, $id): Response
+    {
+        $events = $eventsRepository->find($id);
+
+        if (!$events) {
+            $this->addFlash('danger', "L'événement choisi n'existe pas");
+            return $this->redirectToRoute('app_user_my_events');
+        }
+
+        if($this->getUser() !== $events->getUser()){
+            $this->addFlash('danger', "Vous n'êtes pas le proriétaire de cet événément !");
+            return $this->redirectToRoute('app_user_my_events');
+        }
+
+        $entityManager->remove($events);
+        $entityManager->flush();
+        $this->addFlash('success', "L'événement a été bien supprimé !");
+        return $this->redirectToRoute('app_user_my_events');
+    }
+
 }
