@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Events;
+use App\Form\EventCreateType;
 use App\Repository\EventsRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -120,5 +120,37 @@ class EventsController extends AbstractController
         }
 
         return $this->redirectToRoute('app_home');
+    }
+
+    /**
+     * @throws \DateMalformedStringException
+     */
+    #[Route('/event-create', name: 'app_event_create')]
+    public function createEvent(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(EventCreateType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $data = $form->getData();
+
+            $event = new Events();
+            $event
+                ->setTitle($data['title'])
+                ->setContent($data['content'])
+                ->setLocation($data['location'])
+                ->setStartAt(new DateTimeImmutable($data['startAt']->format('Y-m-d H:i:s')))
+                ->setEndAt(new DateTimeImmutable($data['endAt']->format('Y-m-d H:i:s')))
+                ->setUser($this->getUser());
+
+            $entityManager->persist($event);
+            $entityManager->flush();
+            $this->addFlash('success', "L'événement a été bien créer !");
+            return $this->redirectToRoute('app_user_my_events');
+        }
+
+        return $this->render('events/create.html.twig',[
+            "form" => $form->createView()
+        ]);
     }
 }
