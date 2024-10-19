@@ -5,9 +5,10 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row justify-content-center mb-4">
-            <div class="col-xl-4">
+            <div class="col-xl-4 d-flex flex-wrap flex-column align-items-center">
                 <h1 class="text-center my-4">Planify | Nos événements à venir</h1>
                 <p class="text-center">Inscrivez-vous à l'un des événements vous correspondant.</p>
+                <a href="{{ path('app_event_create') }}" class="text-center text-nowrap btn btn-primary px-3 py-2 mb-2 fw-semibold rounded-pill">Créer un événement</a>
             </div>
         </div>
 
@@ -19,18 +20,20 @@
                         <div class="card h-100">
                             <div class="d-flex card-body">
                                 <div class="d-flex flex-column justify-content-center align-items-start">
-                                    <div class="d-flex justify-content-between gap-3 mb-2 flex-wrap">
+                                    <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                         <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
                                         <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
+                                        <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ event.getSuscribers().count() }}</span>
                                     </div>
                                     <h5 class="mb-0 card-title text-uppercase">{{ event.title }}</h5>
                                     <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ event.location }}</p>
+
                                     <hr>
                                     <p class="card-text mt-2 fw-medium flex-grow-1">{{ event.content }}</p>
                                     <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
                                         <small class="d-block">Créer le : <span class="fw-bold">{{ event.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ event.user.firstname }} {{ event.user.lastname }}</span></small>
                                         {% if event.getUser() == app.user %}
-                                            <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier l'événement</a>
+                                            <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mes événement</a>
                                         {% else %}
                                             {% if not event.getSuscribers().contains(app.user) %}
                                                 <a href="{{ path('app_event_suscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>

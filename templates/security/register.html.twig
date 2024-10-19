@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-xl-5 px-4">
+                <h1 class="text-center my-4">Planify | Inscription</h1>
+                {% if not app.user %}
+                <p class="text-center">Inscrivez-vous afin de pouvoir créer et rejoindre des événements.</p>
+
+                {{ form_start(registerForm) }}
+                    <div class="mb-3 d-flex align-items-center justify-content-between gap-1">
+                        <div class="col-6">
+                            <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">{{ form_errors(registerForm.firstname) }}</span>
+                            {{ form_row(registerForm.firstname) }}
+                        </div>
+                        <div class="col-6">
+                            <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">{{ form_errors(registerForm.lastname) }}</span>
+                            {{ form_row(registerForm.lastname) }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">{{ form_errors(registerForm.email) }}</span>
+                        {{ form_row(registerForm.email) }}
+                    </div>
+                    <div class="mb-3 d-flex flex-column gap-2 flex-wrap">
+                        {{ form_row(registerForm.password.first) }}
+                        {{ form_row(registerForm.password.second) }}
+                        <p class="mt-2">Déjà inscrit ? <a class="fw-bold text-black" href="{{ path('app_login') }}">Se connecter !</a></p>
+                    </div>
+                    {{ form_row(registerForm.submit) }}
+                    {{ form_end(registerForm) }}
+                {% else %}
+                    <p class="text-center"><span class="fw-bold">Attention !</span>, vous êtes déjà connectez et vous invitons à vous redirigez depuis ces boutons</p>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-secondary" href="{{ path('app_home') }}">Retournez à l'accueil</a>
+                        <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Se déconnecter</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

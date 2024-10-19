@@ -23,6 +23,11 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
                 </li>
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('app_user_my_events') }}">Mes événements</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     {% if app.user %}
                         <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
@@ -38,9 +43,7 @@
     {% for message in app.flashes('success') %}
         <div class="alert alert-success" role="alert">
             <h4 class="alert-heading">Félicitation!</h4>
-            <p>{{ message }}</p>
-            <hr>
-            <p class="mb-0">Vous pouvez consultez votre rubrique 'Mes événements'.</p>
+            <p class="mb-0">{{ message }}</p>
         </div>
     {% endfor %}
     {% for message in app.flashes('danger') %}
