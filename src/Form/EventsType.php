@@ -2,16 +2,18 @@
 
 namespace App\Form;
 
+use App\Entity\Events;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EventCreateType extends AbstractType
+
+class EventsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -30,7 +32,7 @@ class EventCreateType extends AbstractType
                             'maxMessage' => 'Le titre ne peut pas dépasser {{ limit }} caractères.'
                         ]),
                     ]
-            ])
+                ])
             ->add('content', TextareaType::class,
                 [
                     'attr' => [
@@ -49,26 +51,24 @@ class EventCreateType extends AbstractType
                         ]),
                     ]
                 ])
-            ->add('startAt', DateTimeType::class,
-                [
-                    'widget' => 'single_text',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'min' => (new \DateTime())->format('Y-m-d\TH:i'),
-                    ],
-                    'required' => true,
-                    'label' => "L'évenement démarrera le",
-                ])
-            ->add('endAt', DateTimeType::class,
-                [
-                    'widget' => 'single_text',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'min' => (new \DateTime())->format('Y-m-d\TH:i'),
-                    ],
-                    'required' => true,
-                    'label' => "L'évenement se terminera le",
-                ])
+            ->add('startAt', DateTimeType::class, [
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'form-control',
+                    'min' => (new \DateTime())->format('Y-m-d\TH:i'),
+                ],
+                'required' => true,
+                'label' => "L'événement démarrera le",
+            ])
+            ->add('endAt', DateTimeType::class, [
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'form-control',
+                    'min' => (new \DateTime())->format('Y-m-d\TH:i'),
+                ],
+                'required' => true,
+                'label' => "L'évenement se terminera le",
+            ])
             ->add('location', TextType::class,
                 [
                     'attr' => ['class' => 'form-control'],
@@ -95,8 +95,8 @@ class EventCreateType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-//        $resolver->setDefaults([
-//            'data_class' => User::class,
-//        ]);
+        $resolver->setDefaults([
+            'data_class' => Events::class,
+        ]);
     }
 }

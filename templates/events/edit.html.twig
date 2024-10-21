@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Modifier un événement{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-xl-5 px-4">
+                <h1 class="text-center my-4">Planify | Modifier un événement</h1>
+                <p class="text-center">Modifier les informations de votre événement !</p>
+                <a href="{{ path('app_user_my_events') }}" class="text-center text-nowrap btn btn-dark px-3 py-2 mb-2 fw-semibold rounded-pill">Voir mes événements</a>
+                <a href="{{ path('app_event_delete', { 'id': event.id }) }}" class="text-center text-nowrap btn btn-danger px-3 py-2 mb-2 fw-semibold rounded-pill">Supprimer cette événements</a>
+            </div>
+        </div>
+    </div>
+
+    {{ include('events/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

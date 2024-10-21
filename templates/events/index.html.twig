@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends './base.html.twig' %}
 
 {% block title %}Mes événements{% endblock %}
 
@@ -47,7 +47,7 @@
                                                 <small class="d-block">Créer le : <span class="fw-bold">{{ susbribedEvent.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ susbribedEvent.user.firstname }} {{ susbribedEvent.user.lastname }}</span></small>
                                                 {% if susbribedEvent.getUser() == app.user %}
                                                     <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
-                                                {% else %}
+                                                    {% else %}
                                                     {% if not susbribedEvent.getSuscribers().contains(app.user) %}
                                                         <a href="{{ path('app_event_suscribe', { 'id' : susbribedEvent.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>
                                                     {% else %}
@@ -90,7 +90,7 @@
                                         <div class="d-flex flex-column justify-content-center align-items-start">
                                             <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                                 <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ my_events.startAt|date('d/m/Y') }} à {{ my_events.startAt|date('H:i') }}</span>
-                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ my_events.startAt|date('d/m/Y') }} à {{ my_events.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ my_events.endAt|date('d/m/Y') }} à {{ my_events.endAt|date('H:i') }}</span>
                                                 <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ my_events.getSuscribers().count() }}</span>
                                             </div>
                                             <h5 class="mb-0 card-title text-uppercase">{{ my_events.title }}</h5>
@@ -100,7 +100,7 @@
                                             <p class="card-text mt-2 fw-medium flex-grow-1">{{ my_events.content }}</p>
                                             <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
                                                 <small class="d-block">Créer le : <span class="fw-bold">{{ my_events.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ my_events.user.firstname }} {{ my_events.user.lastname }}</span></small>
-                                                <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
+                                                <a href="{{ path('app_event_edit', { id: my_events.id }) }}" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
                                             </div>
                                         </div>
                                     </div>
