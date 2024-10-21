@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Events;
-use App\Form\EventCreateType;
+use App\Form\EventsType;
 use App\Repository\EventsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,13 +11,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class EventsController extends AbstractController
+#[Route('/events')]
+final class EventsController extends AbstractController
 {
+
     /**
      * @param EventsRepository $eventsRepository
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/my-events/', name: 'app_user_my_events')]
     public function userEvent(EventsRepository $eventsRepository): Response
     {
@@ -47,7 +51,6 @@ class EventsController extends AbstractController
             'myCreatedEvents' => $myEvents,
             'subscribedEvents' => $subscribedEvents,
             'completedEvents' => $completedEvents,
-
             'currentDateTime' => new \DateTimeImmutable(),
         ]);
     }
@@ -60,6 +63,7 @@ class EventsController extends AbstractController
      * @param EntityManagerInterface $entityManager The entity manager
      * @return Response A redirection to the home page
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/events-unsuscribe/{id}', name: 'app_event_unsuscribe')]
     public function userUnsuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
@@ -99,6 +103,7 @@ class EventsController extends AbstractController
      *
      * @return Response A redirection to the homepage.
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/events-suscribe/{id}', name: 'app_event_suscribe')]
     public function userSuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
@@ -141,7 +146,6 @@ class EventsController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-
     /**
      * Creates a new event and redirects to the user's event list.
      *
@@ -149,61 +153,81 @@ class EventsController extends AbstractController
      * @param EntityManagerInterface $entityManager The entity manager.
      * @return Response The response to the user.
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/event-create', name: 'app_event_create')]
     public function createEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EventCreateType::class);
+        $event = new Events();
+        $form = $this->createForm(EventsType::class, $event);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            $event = new Events();
             $event
-                ->setTitle($data['title'])
-                ->setContent($data['content'])
-                ->setLocation($data['location'])
-                ->setStartAt(new DateTimeImmutable($data['startAt']->format('Y-m-d H:i:s')))
-                ->setEndAt(new DateTimeImmutable($data['endAt']->format('Y-m-d H:i:s')))
                 ->setUser($this->getUser());
 
             $entityManager->persist($event);
             $entityManager->flush();
+
             $this->addFlash('success', "L'événement a été bien créer !");
-            return $this->redirectToRoute('app_user_my_events');
+            return $this->redirectToRoute('app_user_my_events', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('events/create.html.twig',[
-            "form" => $form->createView()
+        return $this->render('events/new.html.twig', [
+            'event' => $event,
+            'form' => $form,
         ]);
     }
 
     /**
      * @param Request $request
+     * @param Events $event
      * @param EntityManagerInterface $entityManager
-     * @param EventsRepository $eventsRepository
-     * @param $id
      * @return Response
      */
-    #[Route('/event-delete/{id}', name: 'app_event_delete')]
-    public function deleteEvent(Request $request, EntityManagerInterface $entityManager, EventsRepository $eventsRepository, $id): Response
+    #[IsGranted('ROLE_USER')]
+    #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Events $event, EntityManagerInterface $entityManager): Response
     {
-        $events = $eventsRepository->find($id);
-
-        if (!$events) {
-            $this->addFlash('danger', "L'événement choisi n'existe pas");
-            return $this->redirectToRoute('app_user_my_events');
-        }
-
-        if($this->getUser() !== $events->getUser()){
+        if($this->getUser() !== $event->getUser()){
             $this->addFlash('danger', "Vous n'êtes pas le proriétaire de cet événément !");
             return $this->redirectToRoute('app_user_my_events');
         }
 
-        $entityManager->remove($events);
+        $form = $this->createForm(EventsType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash('success', "L'événement a été bien modifié !");
+            return $this->redirectToRoute('app_user_my_events', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('events/edit.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Events $event
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[IsGranted('ROLE_USER')]
+    #[Route('/delete/{id}', name: 'app_event_delete')]
+    public function delete(Request $request, Events $event, EntityManagerInterface $entityManager): Response
+    {
+        if($this->getUser() !== $event->getUser()){
+            $this->addFlash('danger', "Vous n'êtes pas le proriétaire de cet événément !");
+            return $this->redirectToRoute('app_user_my_events');
+        }
+
+        $entityManager->remove($event);
         $entityManager->flush();
         $this->addFlash('success', "L'événement a été bien supprimé !");
         return $this->redirectToRoute('app_user_my_events');
     }
-
 }

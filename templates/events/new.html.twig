@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un événement{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-xl-5 px-4">
+                <h1 class="text-center my-4">Planify | Créer un événement</h1>
+                <p class="text-center">Démarrer la création de votre événement et receuillez des participants.</p>
+                <a href="{{ path('app_user_my_events') }}" class="text-center text-nowrap btn btn-dark px-3 py-2 mb-2 fw-semibold rounded-pill">Voir mes événements</a>
+            </div>
+        </div>
+    </div>
+
+    {{ include('events/_form.html.twig') }}
+{% endblock %}

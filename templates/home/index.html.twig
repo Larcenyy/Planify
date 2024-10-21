@@ -29,7 +29,7 @@
                                 <div class="d-flex flex-column justify-content-center align-items-start">
                                     <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                         <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
-                                        <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
+                                        <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ event.endAt|date('d/m/Y') }} à {{ event.endAt|date('H:i') }}</span>
                                         <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ event.getSuscribers().count() }}</span>
                                     </div>
                                     <h5 class="mb-0 card-title text-uppercase">{{ event.title }}</h5>
@@ -40,7 +40,7 @@
                                     <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
                                         <small class="d-block">Créer le : <span class="fw-bold">{{ event.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ event.user.firstname }} {{ event.user.lastname }}</span></small>
                                         {% if event.getUser() == app.user %}
-                                            <a href="" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mes événement</a>
+                                            <a href="{{ path("app_event_edit", { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mes événement</a>
                                         {% else %}
                                             {% if not event.getSuscribers().contains(app.user) %}
                                                 <a href="{{ path('app_event_suscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>

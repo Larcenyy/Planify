@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventsRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,24 +31,21 @@ class Events
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\DateTime]
-    private ?\DateTimeImmutable $startAt = null;
+    #[Assert\GreaterThanOrEqual('today')]
+    private DateTimeImmutable $startAt;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\DateTime]
-    private ?\DateTimeImmutable $endAt = null;
+    private DateTimeImmutable $endAt;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\DateTime]
-    private ?\DateTimeImmutable $createdAt = null;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\DateTime]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
@@ -97,24 +95,24 @@ class Events
         return $this;
     }
 
-    public function getStartAt(): ?\DateTimeImmutable
+    public function getStartAt(): DateTimeImmutable
     {
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeImmutable $startAt): static
+    public function setStartAt(DateTimeImmutable $startAt): static
     {
         $this->startAt = $startAt;
 
         return $this;
     }
 
-    public function getEndAt(): ?\DateTimeImmutable
+    public function getEndAt(): DateTimeImmutable
     {
         return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeImmutable $endAt): static
+    public function setEndAt(DateTimeImmutable $endAt): static
     {
         $this->endAt = $endAt;
 
