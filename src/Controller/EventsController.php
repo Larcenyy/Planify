@@ -25,23 +25,8 @@ class EventsController extends AbstractController
 
         $myEvents = $eventsRepository->findBy(['user' => $user]);
 
-        $subscribedEvents = $eventsRepository->createQueryBuilder('e')
-            ->where('e.startAt > :now')
-            ->andWhere(':user MEMBER OF e.suscribers')
-            ->setParameter('now', new \DateTimeImmutable())
-            ->setParameter('user', $user)
-            ->orderBy('e.startAt', 'ASC')
-            ->getQuery()
-            ->getResult();
-
-        $completedEvents = $eventsRepository->createQueryBuilder('e')
-            ->where('e.startAt < :now')
-            ->andWhere('e.user = :user OR :user MEMBER OF e.suscribers')
-            ->setParameter('now', new \DateTimeImmutable())
-            ->setParameter('user', $user)
-            ->orderBy('e.startAt', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $subscribedEvents = $eventsRepository->findByUserSuscribed($user);
+        $completedEvents = $eventsRepository->findByCompletedEvents($user);
 
         return $this->render('events/index.html.twig', [
             'myCreatedEvents' => $myEvents,
