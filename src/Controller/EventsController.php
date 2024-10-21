@@ -205,5 +205,4 @@ class EventsController extends AbstractController
         $this->addFlash('success', "L'événement a été bien supprimé !");
         return $this->redirectToRoute('app_user_my_events');
     }
-
 }
