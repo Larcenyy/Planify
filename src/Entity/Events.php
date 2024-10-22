@@ -8,37 +8,44 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: EventsRepository::class)]
 class Events
 {
+    #[Groups(['event:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['event:read'])]
     #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?string $title = null;
 
+    #[Groups(['event:read'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?string $content = null;
 
+    #[Groups(['event:read'])]
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\GreaterThanOrEqual('today')]
     private DateTimeImmutable $startAt;
 
+    #[Groups(['event:read'])]
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private DateTimeImmutable $endAt;
 
+    #[Groups(['event:read'])]
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
@@ -47,15 +54,18 @@ class Events
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt;
 
+    #[Groups(['event:read'])]
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
 
+    #[Groups(['event:read'])]
     #[ORM\Column(length: 255)]
     private ?string $location = null;
 
     /**
      * @var Collection<int, User>
      */
+    #[Groups(['event:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events_suscribers')]
     private Collection $suscribers;
 

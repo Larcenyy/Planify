@@ -8,10 +8,12 @@ use App\Repository\EventsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/events')]
 final class EventsController extends AbstractController
@@ -49,7 +51,7 @@ final class EventsController extends AbstractController
      * @return Response A redirection to the home page
      */
     #[IsGranted('ROLE_USER')]
-    #[Route('/events-unsuscribe/{id}', name: 'app_event_unsuscribe')]
+    #[Route('/unsuscribe/{id}', name: 'app_event_unsuscribe')]
     public function userUnsuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
         $event = $eventsRepository->find($id);
@@ -89,7 +91,7 @@ final class EventsController extends AbstractController
      * @return Response A redirection to the homepage.
      */
     #[IsGranted('ROLE_USER')]
-    #[Route('/events-suscribe/{id}', name: 'app_event_suscribe')]
+    #[Route('/suscribe/{id}', name: 'app_event_suscribe')]
     public function userSuscribeEvent($id, EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
     {
         $event = $eventsRepository->find($id);
@@ -139,7 +141,7 @@ final class EventsController extends AbstractController
      * @return Response The response to the user.
      */
     #[IsGranted('ROLE_USER')]
-    #[Route('/event-create', name: 'app_event_create')]
+    #[Route('/create', name: 'app_event_create')]
     public function createEvent(Request $request, EntityManagerInterface $entityManager): Response
     {
         $event = new Events();
@@ -214,5 +216,18 @@ final class EventsController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', "L'événement a été bien supprimé !");
         return $this->redirectToRoute('app_user_my_events');
+    }
+
+    #[Route('/getbytags', name: 'api_events', methods: ['GET'])]
+    public function getEventsByTags(Request $request, SerializerInterface $serializer, EventsRepository $eventsRepository): JsonResponse
+    {
+        $startAt = $request->query->get('startAt');
+        $endAt = $request->query->get('endAt');
+
+        $events = $eventsRepository->findByTags($startAt, $endAt);
+
+        $data = $serializer->serialize($events, 'json', ['groups' => 'event:read']); // Assure-toi d'avoir défini les groupes de sérialisation si nécessaire
+
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

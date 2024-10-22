@@ -88,7 +88,7 @@ class EventsType extends AbstractType
                 'attr' => [
                     'class' => "mt-2 btn btn-primary w-100",
                 ],
-                'label' => 'Créer mon événement'
+                'label' => 'Soumettre'
             ])
         ;
     }

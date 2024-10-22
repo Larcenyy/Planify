@@ -35,7 +35,7 @@
                                         <div class="d-flex flex-column justify-content-center align-items-start">
                                             <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                                 <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ susbribedEvent.startAt|date('d/m/Y') }} à {{ susbribedEvent.startAt|date('H:i') }}</span>
-                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ susbribedEvent.startAt|date('d/m/Y') }} à {{ susbribedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ susbribedEvent.endAt|date('d/m/Y') }} à {{ susbribedEvent.endAt|date('H:i') }}</span>
                                                 <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ susbribedEvent.getSuscribers().count() }}</span>
                                             </div>
                                             <h5 class="mb-0 card-title text-uppercase">{{ susbribedEvent.title }}</h5>
@@ -135,7 +135,7 @@
                                         <div class="d-flex flex-column justify-content-center align-items-start">
                                             <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                                 <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarrer le : {{ completedEvent.startAt|date('d/m/Y') }} à {{ completedEvent.startAt|date('H:i') }}</span>
-                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Terminer le : {{ completedEvent.startAt|date('d/m/Y') }} à {{ completedEvent.startAt|date('H:i') }}</span>
+                                                <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Terminer le : {{ completedEvent.endAt|date('d/m/Y') }} à {{ completedEvent.endAt|date('H:i') }}</span>
                                                 <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant total : {{ completedEvent.getSuscribers().count() }}</span>
                                             </div>
                                             <h5 class="mb-0 card-title text-uppercase">{{ completedEvent.title }}</h5>
