@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <div class="mb-3 col col-lg-5 col-xl-3 mx-auto d-flex flex-wrap gap-1">
+        <div class="mb-3 col col-lg-5 col-xl-3 mx-auto d-flex flex-wrap justify-content-center align-items-center gap-1">
             <div>
                 <label for="startAt">Rechercher un événment qui démarre le </label>
                 <input name="startAt" id="startAt" type="date" class="form-control">
@@ -40,7 +40,7 @@
                                     <div class="d-flex justify-content-around gap-2 mb-2 flex-wrap">
                                         <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Démarre le : {{ event.startAt|date('d/m/Y') }} à {{ event.startAt|date('H:i') }}</span>
                                         <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ event.endAt|date('d/m/Y') }} à {{ event.endAt|date('H:i') }}</span>
-                                        <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ event.getSuscribers().count() }}</span>
+                                        <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participants : {{ event.getSuscribers().count() }}</span>
                                     </div>
                                     <h5 class="mb-0 card-title text-uppercase">{{ event.title }}</h5>
                                     <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ event.location }}</p>
@@ -48,9 +48,9 @@
                                     <hr>
                                     <p class="card-text mt-2 fw-medium flex-grow-1">{{ event.content }}</p>
                                     <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between gap-3">
-                                        <small class="d-block">Créer le : <span class="fw-bold">{{ event.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ event.user.firstname }} {{ event.user.lastname }}</span></small>
+                                        <small class="d-block">Créé le : <span class="fw-bold">{{ event.createdAt|date('d/m/Y') }}</span> par <span class="fw-bold text-uppercase">{{ event.user.firstname }} {{ event.user.lastname }}</span></small>
                                         {% if event.getUser() == app.user %}
-                                            <a href="{{ path("app_event_edit", { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mes événement</a>
+                                            <a href="{{ path("app_event_edit", { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-secondary px-3 py-2 mb-2 fw-semibold rounded-pill">Modifier mon événement</a>
                                         {% else %}
                                             {% if not event.getSuscribers().contains(app.user) %}
                                                 <a href="{{ path('app_event_suscribe', { 'id' : event.id }) }}" class="text-nowrap btn btn-outline-success px-3 py-2 mb-2 fw-semibold rounded-pill">Rejoindre l'événement</a>
