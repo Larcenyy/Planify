@@ -40,4 +40,30 @@ class EventsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByTags($start, $end)
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
+
+        if ($start) {
+            $queryBuilder->andWhere('e.startAt >= :startAt')
+                ->setParameter('startAt', $start);
+        }
+
+        if ($end) {
+            $queryBuilder->andWhere('e.endAt <= :endAt')
+                ->setParameter('endAt', $end);
+        }
+
+        if ($start || $end) {
+            $queryBuilder->orWhere('e.startAt BETWEEN :startAt AND :endAt')
+                ->orWhere('e.endAt BETWEEN :startAt AND :endAt')
+                ->orWhere('e.startAt <= :endAt AND e.endAt >= :startAt')
+                ->setParameter('startAt', $start)
+                ->setParameter('endAt', $end)
+                ->orderBy('e.startAt', 'ASC');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
