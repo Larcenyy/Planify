@@ -67,7 +67,12 @@ class EventsRepository extends ServiceEntityRepository
 
         return !empty($events) ? $events : null;
     }
-  
+
+    /**
+     * @param $start
+     * @param $end
+     * @return mixed
+     */
     public function findByTags($start, $end)
     {
         $queryBuilder = $this->createQueryBuilder('e');

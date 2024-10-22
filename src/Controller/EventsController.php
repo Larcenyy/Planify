@@ -150,8 +150,7 @@ final class EventsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $event
-                ->setUser($this->getUser());
+            $event->setUser($this->getUser());
 
             $entityManager->persist($event);
             $entityManager->flush();
@@ -204,7 +203,7 @@ final class EventsController extends AbstractController
      * @return Response
      */
     #[IsGranted('ROLE_USER')]
-    #[Route('/delete/{id}', name: 'app_event_delete')]
+    #[Route('/{id}/delete', name: 'app_event_delete')]
     public function delete(Request $request, Events $event, EntityManagerInterface $entityManager): Response
     {
         if($this->getUser() !== $event->getUser()){
@@ -218,6 +217,12 @@ final class EventsController extends AbstractController
         return $this->redirectToRoute('app_user_my_events');
     }
 
+    /**
+     * @param Request $request
+     * @param SerializerInterface $serializer
+     * @param EventsRepository $eventsRepository
+     * @return JsonResponse
+     */
     #[Route('/getbytags', name: 'api_events', methods: ['GET'])]
     public function getEventsByTags(Request $request, SerializerInterface $serializer, EventsRepository $eventsRepository): JsonResponse
     {
