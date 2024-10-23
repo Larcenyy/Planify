@@ -15,7 +15,7 @@ Cette application permet à des utilisateurs de créer, modifier et gérer des �
 - MySQL
 - Node.js et npm (pour le développement front-end)
 
-## Installation
+## Installation 
 1. Clonez le dépôt :
 ```
 git clone git@github.com:Larcenyy/Planify.git
@@ -28,6 +28,9 @@ cd Planify
 
 ```
 composer install
+```
+```
+npm install && npm build
 ```
 
 3. Configurez la base de données :
@@ -42,11 +45,12 @@ php bin/console doctrine:database:create
 ```
 php bin/console doctrine:migrations:migrate
 ```
-7. Chargez les fixtures **(Uniquement si vous souhaitez obtenir des utilisateurs et des événements fictifs)** :
+7. Chargez les fixtures **(Environnement dev)** :
+
 ```
 php bin/console doctrine:fixtures:load
 ```
-9. Démarrez le serveur de développement :
+9. Démarrez le serveur :
 ```
 symfony server:start
 ```
