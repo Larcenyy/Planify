@@ -38,11 +38,13 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $manager->flush();
+
         // Generation of event fixtures
         for ($i = 0; $i < 3; $i++) {
             $event = new Events();
-            $event->setTitle($this->faker->sentence());
-            $event->setContent($this->faker->paragraph());
+            $event->setTitle($this->faker->word());
+            $event->setContent($this->faker->paragraph(2));
             $event->setLocation($this->faker->city());
 
             $start_date = new DateTime();
