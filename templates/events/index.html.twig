@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
     <div class="row justify-content-center mb-4">
-        <div class="col-xl-4">
+        <div class="col-xl-4 d-flex flex-wrap flex-column align-items-center">
             <h1 class="text-center my-4 mb-2">Planify | Vos événéments</h1>
             <p class="text-center">Retrouvez la liste des événements auquels vous vous êtes inscrit.</p>
             <div class="d-flex justify-content-between gap-2">
@@ -14,6 +14,7 @@
                 <span class="badge bg-success bg-opacity-25 border-success rounded-pill text-success">Nombre d'événement inscrit : {{ subscribedEvents|length }}</span>
                 <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Nombre d'événement terminé : {{ completedEvents|length }}</span>
             </div>
+            <a href="{{ path('app_event_create') }}" class="mt-4 text-center text-nowrap btn btn-primary px-3 py-2 mb-2 fw-semibold rounded-pill">Créer un événement</a>
         </div>
 
     </div>
@@ -38,6 +39,8 @@
                                                 <span class="badge bg-danger bg-opacity-25 border-success rounded-pill text-danger">Fin le : {{ susbribedEvent.endAt|date('d/m/Y') }} à {{ susbribedEvent.endAt|date('H:i') }}</span>
                                                 <span class="badge bg-primary bg-opacity-25 border-success rounded-pill text-primary mt-1">Participant : {{ susbribedEvent.getSuscribers().count() }}</span>
                                             </div>
+                                            <a href="{{ path('app_event_create') }}" class="text-center text-nowrap btn btn-primary px-3 py-2 mb-2 fw-semibold rounded-pill">Créer un événement</a>
+
                                             <h5 class="mb-0 card-title text-uppercase">{{ susbribedEvent.title }}</h5>
                                             <p class="card-text mt-2 fw-medium mt-0 mb-0">📍 {{ susbribedEvent.location }}</p>
 
