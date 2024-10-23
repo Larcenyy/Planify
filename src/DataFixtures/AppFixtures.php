@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
         // Generation of event fixtures
         for ($i = 0; $i < 3; $i++) {
             $event = new Events();
-            $event->setTitle($this->faker->sentence());
+            $event->setTitle($this->faker->word());
             $event->setContent($this->faker->paragraph());
             $event->setLocation($this->faker->city());
 
