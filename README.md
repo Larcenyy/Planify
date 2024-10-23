@@ -18,12 +18,14 @@ Cette application permet à des utilisateurs de créer, modifier et gérer des �
 ## Installation
 1. Clonez le dépôt :
 ```
-git clone https://github.com/votre-utilisateur/votre-repository.git
-cd votre-repository
+git clone git@github.com:Larcenyy/Planify.git
+```
+```
+cd Planify
 ```
 
 2. Installez les dépendances :
-   
+
 ```
 composer install
 ```
@@ -52,7 +54,7 @@ symfony server:start
 ### Vous pouvez maintenant accéder à l'application à l'adresse http://localhost:8000.
 
 # Utilisation
- ## Authentification
+## Authentification
 **Inscription :** Les utilisateurs peuvent s'inscrire en fournissant leur nom, adresse e-mail et mot de passe. Le mot de passe doit contenir plus de 8 caractères, au moins une majuscule, un chiffre et un caractère spécial.
 
 **Connexion :** Les utilisateurs peuvent se connecter avec leur adresse e-mail et mot de passe.
@@ -78,6 +80,3 @@ Les tests unitaires sont limités à certaines fonctionnalités (voir le dossier
 
 **Contribuer :**
 Les contributions sont les bienvenues ! Pour proposer des améliorations ou signaler des problèmes, ouvrez une issue ou soumettez une pull request.
-
-### License
-*Ce projet est sous la licence MIT.*
