@@ -2,7 +2,7 @@
 Cette application permet à des utilisateurs de créer, modifier et gérer des événements. Elle inclut des fonctionnalités d'inscription, de connexion et de gestion des événements, le tout dans une interface responsive.
 
 ## Technologies Utilisées
-- Symfony (dernière version)
+- Symfony
 - PHP
 - MySQL
 - Bootstrap (pour le design)
