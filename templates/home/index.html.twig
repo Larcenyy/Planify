@@ -70,12 +70,10 @@
         </div>
     </div>
 
-    {% block javascripts %}
-        <script src="{{ asset('filter.js') }}"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                filterByTag('{{ app.user ? app.user.id : '' }}');
-            });
-        </script>
-    {% endblock %}
+    <script src="{{ asset('filter.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterByTag('{{ app.user ? app.user.id : '' }}');
+        });
+    </script>
 {% endblock %}
